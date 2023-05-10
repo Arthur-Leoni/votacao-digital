@@ -6,8 +6,12 @@ import java.time.LocalDateTime;
 @Data
 public class Sessao {
 
-    private boolean sessaoAberta = false;
+    private LocalDateTime fimSessao;
 
-    private LocalDateTime fimSessao = null;
+
+    public Sessao() {
+        this.fimSessao = null;
+    }
+
 
 }
