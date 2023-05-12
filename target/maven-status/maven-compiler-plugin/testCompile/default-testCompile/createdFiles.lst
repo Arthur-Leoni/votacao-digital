@@ -1,0 +1,4 @@
+com\example\votacaodigital\controller\VotacaoControllerTest.class
+com\example\votacaodigital\service\VotoServiceTest.class
+com\example\votacaodigital\service\PautaServiceTest.class
+com\example\votacaodigital\factory\PautaFactory.class

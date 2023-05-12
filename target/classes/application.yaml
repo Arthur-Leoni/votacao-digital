@@ -1,0 +1,23 @@
+### Configuracao endpoints
+votacaocontroller:
+  mapping: ${VOTACAO_CONTROLLER_MAPPING:pautas}
+  iniciarvotacao: ${VOTACAO_INICIAR_VOTACAO_ENDPOINT:iniciarVotacao}
+  votar: ${VOTACAO_VOTAR_ENDPOINT:votar}
+  buscarResultado: ${VOTACAO_BUSCAR_RESULTADO_ENDPOINT:resultado}
+
+feign:
+  url: ${FEIGN_VERIFICA_CPF_URL:http://localhost:8080}
+  endpoint: ${FEIGN_VERIFICA_CPF_ENDPOINT:/pautas/verificacpf/{cpf}}
+
+### Configuracao Mongo
+spring:
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://admin:admin@0.0.0.0:27017/eleicao-digital?authSource=admin}
+      database: ${SPRING_DATA_MONGODB_DATABASE:eleicao-digital}
+
+### Configuracao Spring
+  application:
+    name: votacao-digital
+  server:
+    port: 8080

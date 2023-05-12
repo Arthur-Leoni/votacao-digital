@@ -7,7 +7,7 @@ public class CreatePautaDTO {
 
     private String titulo;
 
-    public Pauta toDomain(){
+    public Pauta toEntity(){
         return Pauta.builder()
                 .titulo(this.titulo)
                 .sessao(new Sessao())

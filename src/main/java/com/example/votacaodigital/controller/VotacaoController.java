@@ -14,6 +14,7 @@ import com.example.votacaodigital.model.VotoDTO;
 import com.example.votacaodigital.model.VotoResultadoResponse;
 import com.example.votacaodigital.service.PautaService;
 import com.example.votacaodigital.service.VotoService;
+import com.example.votacaodigital.util.ValidadorCPF;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class VotacaoController {
     @ApiOperation("Cria uma nova pauta")
     @PostMapping
     public ResponseEntity<Pauta> criarPauta(@RequestBody CreatePautaDTO createPautaRequest) {
-        Pauta novaPauta = pautaService.save(createPautaRequest.toDomain());
+        Pauta novaPauta = pautaService.save(createPautaRequest.toEntity());
         log.info("Nova pauta criada: "+ novaPauta.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(novaPauta);
     }
@@ -64,15 +65,8 @@ public class VotacaoController {
     @ApiOperation("Registra voto em uma pauta com sessao aberta")
     @PostMapping("/${votacaocontroller.votar}")
     public ResponseEntity<String> votar(@RequestBody VotoDTO votoDTO) {
-        // TODO validarCpf(cpf); Colocar liga e desliga via config
-
         try {
-            //TODO criar um toEntity
-            Voto novoVoto = Voto.builder()
-                    .pautaId(votoDTO.getPautaId())
-                    .voto(votoDTO.getVoto())
-                    .cpfAssociado(votoDTO.getCpf())
-                    .build();
+            Voto novoVoto = votoDTO.toEntity();
             Voto voto = votoService.registrarVoto(novoVoto);
 
             // Retorna mensagem de sucesso
@@ -116,12 +110,10 @@ public class VotacaoController {
     @GetMapping("/verificacpf/{cpf}")
     public boolean verificarCpf(@PathVariable String cpf) {
         //Apenas uma simulação como se fosse utilizar um endpoit externo
-
-        //logica simples cpfs terminados em 0 não serão aceitos (apenas para teste)
-        if((cpf.charAt(cpf.length() - 1)) == '0') {
-            return false;
+        if(ValidadorCPF.validarCPF(cpf)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
 }
