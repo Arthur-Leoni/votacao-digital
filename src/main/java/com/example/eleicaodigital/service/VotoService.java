@@ -2,19 +2,21 @@ package com.example.eleicaodigital.service;
 
 import com.example.eleicaodigital.exceptions.CpfJaVotouException;
 import com.example.eleicaodigital.exceptions.SessaoDeVotacaoEncerradaException;
-import com.example.eleicaodigital.exceptions.SessaoDeVotacaoJaIniciadaException;
+import com.example.eleicaodigital.exceptions.SessaoDeVotacaoNaoEncerradaException;
 import com.example.eleicaodigital.exceptions.VotacaoPendenteException;
 import com.example.eleicaodigital.model.Pauta;
 import com.example.eleicaodigital.model.Voto;
 import com.example.eleicaodigital.model.VotoEnum;
 import com.example.eleicaodigital.model.VotoResultadoResponse;
 import com.example.eleicaodigital.repository.VotoRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Log4j2
 public class VotoService {
 
     @Autowired
@@ -28,6 +30,8 @@ public class VotoService {
     }
 
     public Voto registrarVoto(Voto novoVoto) throws CpfJaVotouException {
+        //Devera ser usado criptografia no cpf para nao ficar exposto
+        log.info("Registrando voto do cpf: "+ novoVoto.getCpfAssociado());
         //Busca e valida se existe a pauta
         Pauta pauta = pautaService.findById(novoVoto.getPautaId());
 
@@ -42,6 +46,8 @@ public class VotoService {
     }
 
     public VotoResultadoResponse buscarResultado(String pautaId){
+        log.info("Buscando resultado referente a pauta: "+ pautaId);
+
         Pauta pauta = pautaService.findById(pautaId);
         validaSeVotacaoJaFoiRealizada(pauta);
         validaFimDaSessao(pauta);;
@@ -61,6 +67,7 @@ public class VotoService {
 
     private void validaVotoCpf(String cpf, String pautaId) throws CpfJaVotouException {
         if(votoRepository.findByCpfAssociadoAndPautaId(cpf, pautaId).isPresent()){
+            log.info("Este CPF já votou e não pode votar novamente. cpf: "+ cpf);
             throw new CpfJaVotouException();
         }
     }
@@ -68,13 +75,15 @@ public class VotoService {
     private void validaFimDaSessao(Pauta pauta) {
         //Valida se a sessao ja foi finalizada
         if(!pauta.isSessaoFinalizada()){
-            throw new SessaoDeVotacaoEncerradaException();
+            log.info("A sessão de votação para esta pauta não foi finalizada: "+ pauta.getId());
+            throw new SessaoDeVotacaoNaoEncerradaException();
         }
     }
 
     private void validaSeVotacaoJaFoiRealizada(Pauta pauta) {
         //Valida votacao ja foi realizada
         if(pauta.getSessao().getFimSessao() == null){
+            log.info("A sessão de votação ainda não foi iniciada para pauta: "+ pauta.getId());
             throw new VotacaoPendenteException();
         }
     }
@@ -82,6 +91,7 @@ public class VotoService {
     private void validaSessaoAberta(Pauta pauta) {
         //Sessao deve estar aberta
         if (!pauta.isSessaoAberta()) {
+            log.info("A sessão de votação para esta pauta já foi encerrada: "+ pauta.getId());
             throw new SessaoDeVotacaoEncerradaException();
         }
     }
