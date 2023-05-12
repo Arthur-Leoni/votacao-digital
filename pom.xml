@@ -17,7 +17,7 @@
 		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
-		<!-- Dependência Spring Boot -->
+		<!--Spring Boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -35,13 +35,13 @@
 			<version>2.5.4</version>
 		</dependency>
 
-		<!-- Dependências Mongo -->
+		<!-- Mongo -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
 		</dependency>
 
-		<!-- Dependências Spring -->
+		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -58,7 +58,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Dependências do Swagger -->
+		<!-- Swagger -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -76,14 +76,32 @@
 			<version>2.12.3</version>
 		</dependency>
 
-		<!-- Dependência lombok -->
+		<!--lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.24</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<!--Mockito -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>3.12.4</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!--openfeign -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+
 	</dependencies>
+
+
 
 	<build>
 		<plugins>
